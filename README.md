@@ -301,15 +301,48 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 ```
 
-If you want to see the usage you can check the two pages in the repo
+## Usage.
 
+Now we can use the context in our components.
+In the `signin.tsx` page we can use the `signIn` function like this :
+
+```js
+// pages/auth/signin.tsx
+import React from "react";
+import { useAuth } from "../../src/context/UserContext";
+
+type Props = {};
+
+export default function Signin({}: Props) {
+  const { signIn } = useAuth();
+  const [credentials, setCredentials] = React.useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCredentials({
+      ...credentials,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  return <div>// You form component here</div>;
+}
 ```
 
-- pages/auth/signin.tsx
-- pages/index.tsx
+And in the `index.tsx` page we can use the `signOut` function like this :
 
-```
+```js
+// pages/index.tsx
+import { useAuth } from "../src/context/UserContext";
 
-```
-
+export default function Home() {
+  const { signOut } = useAuth();
+  return (
+    <div>
+      <button onClick={signOut}>Sign out</button>
+    </div>
+  );
+}
 ```
