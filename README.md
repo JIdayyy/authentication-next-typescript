@@ -49,7 +49,7 @@ interface IUserContext {
 }
 ```
 
-As you can see our interface have 4 keys, one containing the User one is a boolean wich will be true/false if the user is connected or not and two methods signIn & signOut with will handle the API call, the token logic and set the user state.
+As you can see our interface have 4 keys, one containing the User one is a boolean wich will be true/false if the user is connected or not and two methods signIn & signOut wich will handle the API call, the token logic and set the user state.
 The User type basically represent our User.
 
 When those types are good, we need to type our context like this :
