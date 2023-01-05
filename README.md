@@ -75,18 +75,15 @@ We will create a state inside with two keys, isAuth and user.
 
 ```ts
 type AuthState = {
-  user: TUser | null,
-  isAuth: boolean,
+  user: TUser | null;
+  isAuth: boolean;
 };
 
 const UserContextProvider = ({ children }: TUserContextProviderProps) => {
-  const [authState, setAuthState] =
-    useState <
-    AuthState >
-    {
-      user: null,
-      isAuth: false,
-    };
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    isAuth: false,
+  });
 
   return <UserContext.Provider>{children}</UserContext.Provider>;
 };
