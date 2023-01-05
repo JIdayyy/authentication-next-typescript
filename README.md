@@ -346,3 +346,9 @@ export default function Home() {
   );
 }
 ```
+
+I know there is a lot of informations here, but in the end it is not that complicated to implement a context in your nextjs app and it is really useful to manage your user state.
+Once you have done this you can use the context in all your components and pages to get the user informations like the email or avatar.
+The token is also stored in the localStorage so you can use it to make authenticated requests to your backend.
+
+If you have any questions or suggestions feel free to ask in the comments ( you have to be logged in first 🚀 !).
