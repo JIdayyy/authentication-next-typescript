@@ -165,11 +165,48 @@ We have now to pass all this stuff to our provider like this
 </UserContext.Provider>
 ```
 
-At the end our UserContextProvider component should look like this :
+At the end our UserContextProvider file should look like this :
 
 ```js
 // src/context/userContext.tsx
+import { useRouter } from "next/router";
+import { createContext, useContext, useState } from "react";
+import axiosInstance from "../utils/axiosInstance";
+
+type TUser = {
+  id: string,
+  email: string,
+  name: string,
+  avatar: string,
+  createdAt: string,
+  updatedAt: string,
+};
+
+interface IUserContext {
+  user: TUser | null;
+  isAuth: boolean;
+  signIn: (credentials: TCredentials) => Promise<void>;
+  signOut: () => Promise<void>;
+}
+
+type TUserContextProviderProps = {
+  children: React.ReactNode,
+};
+
+type TCredentials = {
+  email: string,
+  password: string,
+};
+
+type AuthState = {
+  user: TUser | null,
+  isAuth: boolean,
+};
+
+const UserContext = (createContext < IUserContext) | (null > null);
+
 const UserContextProvider = ({ children }: TUserContextProviderProps) => {
+  const router = useRouter();
   const [authState, setAuthState] =
     useState <
     AuthState >
@@ -184,15 +221,14 @@ const UserContextProvider = ({ children }: TUserContextProviderProps) => {
         email,
         password,
       });
-
       setAuthState((state) => ({
         isAuth: true,
         user: data,
       }));
-
       const token = headers["authorization"];
       axiosInstance.defaults.headers.common["authorization"] = token;
       localStorage.setItem("token", token || "");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -205,6 +241,7 @@ const UserContextProvider = ({ children }: TUserContextProviderProps) => {
     });
     localStorage.removeItem("token");
     axiosInstance.defaults.headers.common["authorization"] = "";
+    router.push("/auth/signin");
   };
 
   return (
@@ -220,11 +257,59 @@ const UserContextProvider = ({ children }: TUserContextProviderProps) => {
     </UserContext.Provider>
   );
 };
+
+export default UserContextProvider;
+```
+
+To consume this context I use to create a custom hook in the same file like this :
+
+```js
+// src/context/userContext.tsx
+export const useAuth = () => {
+  const context = useContext(UserContext);
+  if (context === null) {
+    throw new Error("useAuth must be used within a UserContextProvider");
+  }
+  return context;
+};
+```
+
+As you can see we use the `useContext` hook to get the context and throw an error if the context is null.
+With this hook we can use the context in our components like this :
+
+```js
+export default function MyComponent() {
+  const { user, isAuth, signIn, signOut } = useAuth();
+  return <div>MyComponent</div>;
+}
+```
+
+Don't forget to wrap your app with the provider in the `_app.tsx` file like this :
+
+```js
+// pages/_app.tsx
+import "../styles/globals.css";
+import type { AppProps } from "next/app";
+import UserContextProvider from "../src/context/UserContext";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <UserContextProvider>
+      <Component {...pageProps} />
+    </UserContextProvider>
+  );
+}
 ```
 
 If you want to see the usage you can check the two pages in the repo
 
 ```
+
 - pages/auth/signin.tsx
 - pages/index.tsx
+
+```
+
+```
+
 ```
