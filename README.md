@@ -351,4 +351,6 @@ I know there is a lot of informations here, but in the end it is not that compli
 Once you have done this you can use the context in all your components and pages to get the user informations like the email or avatar.
 The token is also stored in the localStorage so you can use it to make authenticated requests to your backend.
 
+If you wan't to know how to implement authentication on the server side check this link : [Server authentication on express](https://tutorials.jidayyy.com/tutorial/server-authentication-on-express)
+
 If you have any questions or suggestions feel free to ask in the comments ( you have to be logged in first 🚀 !).
