@@ -22,7 +22,7 @@ First, create the src folder and inside it create a folder called `context` and 
 In this file you will create the `UserContext`.
 First, import the method `createContext` from React and create the user context.
 
-```js
+```ts
 import { createContext } from "react";
 
 const UserContext = createContext({});
@@ -54,15 +54,15 @@ The User type basically represent our User.
 
 When those types are good, we need to type our context like this :
 
-```js
+```ts
 const UserContext = (createContext < IUserContext) | (null > null);
 ```
 
 Now let's create our context provider.
 
-```js
+```ts
 type TUserContextProviderProps = {
-  children: React.ReactNode,
+  children: React.ReactNode;
 };
 
 const UserContextProvider = ({ children }: TUserContextProviderProps) => {
@@ -73,7 +73,7 @@ const UserContextProvider = ({ children }: TUserContextProviderProps) => {
 This component will handle all the logic of our authentication flow.
 We will create a state inside with two keys, isAuth and user.
 
-```js
+```ts
 type AuthState = {
   user: TUser | null,
   isAuth: boolean,
@@ -96,7 +96,7 @@ Good, now we have our state in the provider, we have now to create the signIn an
 
 In a separate files create an instance of axios like this :
 
-```js
+```ts
 //src/utils/axiosInstance.ts
 import axios from "axios";
 
@@ -113,7 +113,7 @@ We will use this instance of axios in our provider so import it.
 
 The `signIn` is a function who take an object as argument with two keys : email & password.
 
-```js
+```ts
 const signIn = async ({ email, password }: TCredentials) => {
   try {
     const { data, headers } = await axiosInstance.post("/auth/signin", {
@@ -138,7 +138,7 @@ Here the jwt token is in the authorization header, so we get it from the axios r
 
 For the signOut method it is way more simple, the function simply set the user state key as null and the isAuth key as false and remove the token from the local storage.
 
-```js
+```ts
 const signOut = async () => {
   setAuthState({
     user: null,
@@ -152,7 +152,7 @@ const signOut = async () => {
 
 We have now to pass all this stuff to our provider like this
 
-```js
+```ts
 <UserContext.Provider
   value={{
     user: authState.user,
@@ -167,19 +167,19 @@ We have now to pass all this stuff to our provider like this
 
 At the end our UserContextProvider file should look like this :
 
-```js
+```ts
 // src/context/userContext.tsx
 import { useRouter } from "next/router";
 import { createContext, useContext, useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 
 type TUser = {
-  id: string,
-  email: string,
-  name: string,
-  avatar: string,
-  createdAt: string,
-  updatedAt: string,
+  id: string;
+  email: string;
+  name: string;
+  avatar: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 interface IUserContext {
@@ -190,30 +190,27 @@ interface IUserContext {
 }
 
 type TUserContextProviderProps = {
-  children: React.ReactNode,
+  children: React.ReactNode;
 };
 
 type TCredentials = {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 };
 
 type AuthState = {
-  user: TUser | null,
-  isAuth: boolean,
+  user: TUser | null;
+  isAuth: boolean;
 };
 
 const UserContext = (createContext < IUserContext) | (null > null);
 
 const UserContextProvider = ({ children }: TUserContextProviderProps) => {
   const router = useRouter();
-  const [authState, setAuthState] =
-    useState <
-    AuthState >
-    {
-      user: null,
-      isAuth: false,
-    };
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    isAuth: false,
+  });
 
   const signIn = async ({ email, password }: TCredentials) => {
     try {
@@ -263,7 +260,7 @@ export default UserContextProvider;
 
 To consume this context I use to create a custom hook in the same file like this :
 
-```js
+```ts
 // src/context/userContext.tsx
 export const useAuth = () => {
   const context = useContext(UserContext);
@@ -277,7 +274,7 @@ export const useAuth = () => {
 As you can see we use the `useContext` hook to get the context and throw an error if the context is null.
 With this hook we can use the context in our components like this :
 
-```js
+```ts
 export default function MyComponent() {
   const { user, isAuth, signIn, signOut } = useAuth();
   return <div>MyComponent</div>;
@@ -286,7 +283,7 @@ export default function MyComponent() {
 
 Don't forget to wrap your app with the provider in the `_app.tsx` file like this :
 
-```js
+```ts
 // pages/_app.tsx
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
@@ -306,7 +303,7 @@ export default function App({ Component, pageProps }: AppProps) {
 Now we can use the context in our components.
 In the `signin.tsx` page we can use the `signIn` function like this :
 
-```js
+```ts
 // pages/auth/signin.tsx
 import React from "react";
 import { useAuth } from "../../src/context/UserContext";
@@ -333,7 +330,7 @@ export default function Signin({}: Props) {
 
 And in the `index.tsx` page we can use the `signOut` function like this :
 
-```js
+```ts
 // pages/index.tsx
 import { useAuth } from "../src/context/UserContext";
 
