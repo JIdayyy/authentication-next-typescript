@@ -3,9 +3,10 @@
 If you want you can clone this repo to get the code for the tutorial:
 
 ```bash
-git clone
-cd therepo
+git clone https://github.com/JIdayyy/authentication-next-typescript
+cd authentication-next-typescript
 npm install
+npm run dev
 ```
 
 Then you need to create a folder in the pages folder called `auth` and create two files in it called `signin.tsx` and `signup.tsx`.
